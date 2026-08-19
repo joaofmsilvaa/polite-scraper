@@ -16,7 +16,7 @@ from pathlib import Path
 
 import requests
 
-USER_AGENT = "FlyRankInternshipA9/1.0 (+https://github.com/joaofmsilvaa/scraper)"
+USER_AGENT = "FlyRankInternshipA9/1.0 (+https://github.com/joaofmsilvaa/polite-scraper)"
 TIMEOUT_SECONDS = 10
 POLITE_DELAY_SECONDS = 0.5
 RETRY_DELAY_SECONDS = 1.0
