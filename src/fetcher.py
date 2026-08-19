@@ -9,9 +9,11 @@ Responsible for the ONLY thing allowed to touch the network:
   the site
 """
 from __future__ import annotations
+
+import hashlib
 import time
 from pathlib import Path
-from urllib.parse import quote
+
 import requests
 
 USER_AGENT = "FlyRankInternshipA9/1.0 (+https://github.com/joaofmsilvaa/scraper)"
@@ -23,9 +25,15 @@ CACHE_DIR.mkdir(exist_ok=True)
 
 
 def _cache_path_for(url: str) -> Path:
-    """Turn a URL into a safe, unique filename inside cache/."""
-    safe_name = quote(url, safe="") + ".html"
-    return CACHE_DIR / safe_name
+    """
+    Turn a URL into a short, fixed-length, filesystem-safe cache filename.
+
+    Uses a hash instead of the raw (encoded) URL because some Books to
+    Scrape titles are long enough that the encoded URL alone breaks the
+    filename/path length limit on Windows.
+    """
+    digest = hashlib.sha256(url.encode("utf-8")).hexdigest()
+    return CACHE_DIR / f"{digest}.html"
 
 
 def fetch(url: str) -> tuple[str, str]:

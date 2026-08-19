@@ -5,21 +5,25 @@ Walks the catalogue starting at page-1.html, following the site's own
 "next" link, and collects every book detail URL it finds along the way.
 """
 from __future__ import annotations
+
 from urllib.parse import urljoin
+
 from bs4 import BeautifulSoup
+
 from fetcher import fetch
 
 START_URL = "https://books.toscrape.com/catalogue/page-1.html"
 
 
-def discover_book_urls() -> list[str]:
+def discover_book_urls() -> list[tuple[str, str]]:
     """
     Follow the catalogue's own "next" link from page 1 until there isn't
     one, collecting every book link along the way.
 
-    Returns a list of unique, absolute book detail URLs.
+    Returns a list of unique (book_url, source_catalogue_page) pairs —
+    source_catalogue_page is kept for provenance in Stage 3.
     """
-    all_urls: list[str] = []
+    all_pairs: list[tuple[str, str]] = []
     seen: set[str] = set()
     current_url = START_URL
     pages_visited = 0
@@ -39,7 +43,7 @@ def discover_book_urls() -> list[str]:
             absolute_url = urljoin(current_url, link["href"])
             if absolute_url not in seen:
                 seen.add(absolute_url)
-                all_urls.append(absolute_url)
+                all_pairs.append((absolute_url, current_url))
 
         # Let the site tell us whether there is a next page — never hardcode it.
         next_link = soup.select_one("li.next a")
@@ -48,5 +52,5 @@ def discover_book_urls() -> list[str]:
         else:
             current_url = None
 
-    print(f"catalogue_pages={pages_visited}  discovered={len(all_urls)}  unique_urls={len(seen)}")
-    return all_urls
+    print(f"catalogue_pages={pages_visited}  discovered={len(all_pairs)}  unique_urls={len(seen)}")
+    return all_pairs
