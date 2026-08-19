@@ -37,7 +37,7 @@ terms first.
 ## How to run it
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/scraper.git
+git clone https://github.com/joaofmsilva/polite-scraper.git
 cd scraper
 python -m venv .venv
 source .venv/bin/activate      # Windows: .venv\Scripts\activate
